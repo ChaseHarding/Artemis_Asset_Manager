@@ -78,5 +78,5 @@ Artemis_Asset_Manager/
 ## Author
 
 **Chase Harding**  
-Full Stack Developer | TeleOps @ Zoox  
+Full Stack Developer   
 [LinkedIn](https://www.linkedin.com/in/chase-f-harding) · [GitHub](https://github.com/ChaseHarding)
