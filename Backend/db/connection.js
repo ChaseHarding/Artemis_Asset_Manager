@@ -56,5 +56,4 @@ try {
   console.error("⚠️ Database seeding skipped or encountered an error:", error.message);
 }
 
-// This MUST run no matter what
 module.exports = db;

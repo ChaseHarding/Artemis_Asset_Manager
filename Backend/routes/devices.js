@@ -3,13 +3,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
 
-console.log("=== DEVICES.JS IMPORT CHECK ===");
-console.log("What is db?", db);
-
-//debug cuz this is not working
-console.log("db type:", typeof db, db);
-console.log("Available db methods:", Object.keys(db || {}));
-
 //GET all devices
 router.get("/", (req, res) => {
     const devices = db.prepare("SELECT * FROM DEVICE").all();
