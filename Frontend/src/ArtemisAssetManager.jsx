@@ -560,30 +560,52 @@ export default function App() {
     closeModal();
   };
 
-  const deleteDevice = () => {
-    setDevices(prev => prev.filter(d => d.device_id !== form.device_id));
-    setInterfaces(prev => prev.filter(i => i.device_id !== form.device_id));
-    setLogs(prev => prev.filter(l => l.device_id !== form.device_id));
-    if (selectedDevice?.device_id === form.device_id) setSelectedDevice(null);
-    closeModal();
-  };
+ const deleteDevice = async () => {
+  await fetch(`/api/devices/${form.device_id}`, { method: "DELETE" });
+  setDevices(prev => prev.filter(d => d.device_id !== form.device_id));
+  setInterfaces(prev => prev.filter(i => i.device_id !== form.device_id));
+  setLogs(prev => prev.filter(l => l.device_id !== form.device_id));
+  if (selectedDevice?.device_id === form.device_id) setSelectedDevice(null);
+  closeModal();
+};
 
   // ---- Interface CRUD ----
   const openAddInterface = (device_id = null) => { setForm({ ip_address: "", mac_address: "", device_id: device_id || "" }); setModal("add-interface"); };
   const openEditInterface = (i) => { setForm({ ...i }); setModal("edit-interface"); };
   const openDeleteInterface = (i) => { setForm({ ...i }); setModal("delete-interface"); };
 
-  const saveInterface = () => {
+  const saveInterface = async () => {
     if (!form.mac_address || !form.device_id) return;
     if (modal === "add-interface") {
-      // need to update this to call to the api
+      const res = await fetch("/api/interfaces", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ip_address: form.ip_address || null,
+          mac_address: form.mac_address,
+          device_id: Number(form.device_id)
+        })
+      });
+      const newInterface = await res.json();
+      setInterfaces(prev => [...prev, newInterface]);
     } else {
-      setInterfaces(prev => prev.map(i => i.interface_id === form.interface_id ? { ...form, device_id: Number(form.device_id) } : i));
+      const res = await fetch(`/api/interfaces/${form.interface_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ip_address: form.ip_address || null,
+          mac_address: form.mac_address,
+          device_id: Number(form.device_id)
+        })
+      });
+      const updated = await res.json();
+      setInterfaces(prev => prev.map(i => i.interface_id === updated.interface_id ? updated : i));
     }
     closeModal();
   };
 
-  const deleteInterface = () => {
+  const deleteInterface = async () => {
+    await fetch(`/api/interfaces/${form.interface_id}`, { method: "DELETE" });
     setInterfaces(prev => prev.filter(i => i.interface_id !== form.interface_id));
     closeModal();
   };
