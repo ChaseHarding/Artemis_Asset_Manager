@@ -615,17 +615,38 @@ export default function App() {
   const openEditLog = (l) => { setForm({ ...l }); setModal("edit-log"); };
   const openDeleteLog = (l) => { setForm({ ...l }); setModal("delete-log"); };
 
-  const saveLog = () => {
+  const saveLog = async () => {
     if (!form.service_date || !form.device_id) return;
     if (modal === "add-log") {
-     // need to update this to call to the api
+      const res = await fetch("/api/logs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_date: form.service_date,
+          description: form.description || null,
+          device_id: Number(form.device_id)
+        })
+      });
+      const newLog = await res.json();
+      setLogs(prev => [...prev, newLog]);
     } else {
-      setLogs(prev => prev.map(l => l.log_id === form.log_id ? { ...form, device_id: Number(form.device_id) } : l));
+      const res = await fetch(`/api/logs/${form.log_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_date: form.service_date,
+          description: form.description || null,
+          device_id: Number(form.device_id)
+        })
+      });
+      const updated = await res.json();
+      setLogs(prev => prev.map(l => l.log_id === updated.log_id ? updated : l));
     }
     closeModal();
   };
 
-  const deleteLog = () => {
+  const deleteLog = async () => {
+    await fetch(`/api/logs/${form.log_id}`, { method: "DELETE" });
     setLogs(prev => prev.filter(l => l.log_id !== form.log_id));
     closeModal();
   };
