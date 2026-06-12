@@ -8,6 +8,8 @@ A full-stack IT hardware inventory and asset tracking system built for enterpris
 
 In professional IT environments, tracking hardware assets across locations is critical for security, troubleshooting, and lifecycle management. Artemis solves this with a clean dashboard that gives IT teams real-time visibility into every device on the network.
 
+![Artemis Dashboard](assets/dashboard.png)
+
 ---
 
 ## Features
@@ -56,20 +58,9 @@ Artemis_Asset_Manager/
 ├── Frontend/
 │   ├── public/
 │   │   └── index.html
-│   ├── src/
-│   │   ├── App.jsx
-│   │   └── ArtemisAssetManager.jsx
-│   ├── vite.config.js
-│   └── package.json
+│   └── ArtemisAssetManager.jsx
 └── Backend/
-├── db/
-│   └── connection.js
-├── routes/
-│   ├── devices.js
-│   ├── interfaces.js
-│   └── logs.js
-├── index.js
-└── package.json
+    └── (Node/Express API — in progress)
 ```
 
 ---
@@ -79,8 +70,7 @@ Artemis_Asset_Manager/
 - [x] Relational database design and schema
 - [x] React frontend dashboard with full CRUD
 - [x] Search, filtering, and live stats
-- [x] Node.js / Express REST API
-- [x] All CRUD operations persist to Database
+- [ ] Node.js / Express REST API
 - [ ] Connect to Oracle Autonomous Database (OCI)
 - [ ] JWT authentication and protected routes
 - [ ] Deploy to Oracle Cloud Infrastructure
