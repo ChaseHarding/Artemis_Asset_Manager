@@ -537,12 +537,25 @@ export default function App() {
   const openEditDevice = (d) => { setForm({ ...d }); setModal("edit-device"); };
   const openDeleteDevice = (d) => { setForm({ ...d }); setModal("delete-device"); };
 
-  const saveDevice = () => {
+  const saveDevice = async () => {
     if (!form.serial_number || !form.model_name) return;
     if (modal === "add-device") {
-      // need to update to call to the api
+      console.log("form data:", form);
+      const res = await fetch("/api/devices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ serial_number: form.serial_number, model_name: form.model_name })
+      });
+      const newDevice = await res.json();
+      setDevices(prev => [...prev, newDevice]);
     } else {
-      setDevices(prev => prev.map(d => d.device_id === form.device_id ? form : d));
+      const res = await fetch(`/api/devices/${form.device_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ serial_number: form.serial_number, model_name: form.model_name })
+      });
+      const updated = await res.json();
+      setDevices(prev => prev.map(d => d.device_id === updated.device_id ? updated : d));
     }
     closeModal();
   };
@@ -599,15 +612,15 @@ export default function App() {
   const setF = (key, val) => setForm(p => ({ ...p, [key]: val }));
 
   const filteredDevices = devices.filter(d =>
-    d.serial_number.toLowerCase().includes(search.toLowerCase()) ||
-    d.model_name.toLowerCase().includes(search.toLowerCase())
+    (d.serial_number || "").toLowerCase().includes(search.toLowerCase()) ||
+    (d.model_name || "").toLowerCase().includes(search.toLowerCase())
   );
 
   const filteredInterfaces = interfaces.filter(i => {
     const device = devices.find(d => d.device_id === i.device_id);
     return (
       (i.ip_address || "").includes(search) ||
-      i.mac_address.toLowerCase().includes(search.toLowerCase()) ||
+      (i.mac_address || "").toLowerCase().includes(search.toLowerCase()) ||
       (device?.model_name || "").toLowerCase().includes(search.toLowerCase())
     );
   });
