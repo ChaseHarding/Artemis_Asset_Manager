@@ -56,9 +56,20 @@ Artemis_Asset_Manager/
 ├── Frontend/
 │   ├── public/
 │   │   └── index.html
-│   └── ArtemisAssetManager.jsx
+│   ├── src/
+│   │   ├── App.jsx
+│   │   └── ArtemisAssetManager.jsx
+│   ├── vite.config.js
+│   └── package.json
 └── Backend/
-    └── (Node/Express API — in progress)
+├── db/
+│   └── connection.js
+├── routes/
+│   ├── devices.js
+│   ├── interfaces.js
+│   └── logs.js
+├── index.js
+└── package.json
 ```
 
 ---
@@ -68,7 +79,8 @@ Artemis_Asset_Manager/
 - [x] Relational database design and schema
 - [x] React frontend dashboard with full CRUD
 - [x] Search, filtering, and live stats
-- [ ] Node.js / Express REST API
+- [x] Node.js / Express REST API
+- [x] All CRUD operations persist to Database
 - [ ] Connect to Oracle Autonomous Database (OCI)
 - [ ] JWT authentication and protected routes
 - [ ] Deploy to Oracle Cloud Infrastructure
