@@ -18,8 +18,13 @@ router.get("/:id", (req, res) => {
 
 // POST create a new device 
 router.post("/", (req, res) => {
+    console.log("POST body:", req.body);
+    console.log("serial_number:", JSON.stringify(req.body.serial_number));
+    console.log("model_name:", JSON.stringify(req.body.model_name));
     const { serial_number , model_name } = req.body;
-    if (!serial_number || model_name) {
+    if (!serial_number || !model_name) {
+        console.log("type:", typeof req.body.serial_number);
+        console.log("truthy:", !!req.body.serial_number);
         return res.status(400).json({ error: "serial number and model name are required "});
     }
     const result = db.prepare("INSERT INTO DEVICE (serial_number , model_name) VALUES (?, ?)").run(serial_number, model_name);
