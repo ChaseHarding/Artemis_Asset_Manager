@@ -1,28 +1,4 @@
-import { useState } from "react";
-
-const initialDevices = [
-  { device_id: 1, serial_number: "DESKTOP-01", model_name: "Dell Tower" },
-  { device_id: 2, serial_number: "LAPTOP-OFFICE", model_name: "HP Laptop" },
-  { device_id: 3, serial_number: "HR-LPT-03", model_name: "Lenovo" },
-  { device_id: 4, serial_number: "SWITCH-RM1", model_name: "Cisco Switch" },
-  { device_id: 5, serial_number: "TEMP-TABLET", model_name: "iPad" },
-];
-
-const initialInterfaces = [
-  { interface_id: 101, ip_address: "192.168.1.5", mac_address: "AA:BB:CC:DD:EE:01", device_id: 1 },
-  { interface_id: 102, ip_address: null, mac_address: "AA:BB:CC:DD:EE:02", device_id: 2 },
-  { interface_id: 103, ip_address: "192.168.1.10", mac_address: "AA:BB:CC:DD:EE:03", device_id: 3 },
-  { interface_id: 104, ip_address: null, mac_address: "AA:BB:CC:DD:EE:04", device_id: 4 },
-  { interface_id: 105, ip_address: "192.168.1.15", mac_address: "AA:BB:CC:DD:EE:05", device_id: 5 },
-];
-
-const initialLogs = [
-  { log_id: 501, service_date: "2026-05-01", description: "Fixed it", device_id: 1 },
-  { log_id: 502, service_date: "2026-05-02", description: "Screen was cracked", device_id: 3 },
-  { log_id: 503, service_date: "2026-05-03", description: "Update", device_id: 4 },
-  { log_id: 504, service_date: "2026-05-04", description: "New battery", device_id: 2 },
-  { log_id: 505, service_date: "2026-05-05", description: "Cleaned fans", device_id: 5 },
-];
+import { useState, useEffect } from "react";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
@@ -519,15 +495,40 @@ function Modal({ title, onClose, children, footer }) {
 }
 
 export default function App() {
+  const [devices, setDevices] = useState([]);
+  const [interfaces, setInterfaces] = useState([]);
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [view, setView] = useState("devices");
-  const [devices, setDevices] = useState(initialDevices);
-  const [interfaces, setInterfaces] = useState(initialInterfaces);
-  const [logs, setLogs] = useState(initialLogs);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState({});
   const [selectedDevice, setSelectedDevice] = useState(null);
-  const [nextId, setNextId] = useState({ device: 6, iface: 106, log: 506 });
+
+    useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        const [devRes, intRes, logRes] = await Promise.all([
+          fetch("/api/devices"),
+          fetch("/api/interfaces"),
+          fetch("/api/logs")
+        ]);
+        const [devData, intData, logData] = await Promise.all([
+          devRes.json(),
+          intRes.json(),
+          logRes.json()
+        ]);
+        setDevices(devData);
+        setInterfaces(intData);
+        setLogs(logData);
+      } catch (err) {
+        console.error("Failed to fetch data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAll();
+  }, []);
 
   const closeModal = () => { setModal(null); setForm({}); };
 
@@ -539,8 +540,7 @@ export default function App() {
   const saveDevice = () => {
     if (!form.serial_number || !form.model_name) return;
     if (modal === "add-device") {
-      setDevices(prev => [...prev, { device_id: nextId.device, ...form }]);
-      setNextId(p => ({ ...p, device: p.device + 1 }));
+      // need to update to call to the api
     } else {
       setDevices(prev => prev.map(d => d.device_id === form.device_id ? form : d));
     }
@@ -563,8 +563,7 @@ export default function App() {
   const saveInterface = () => {
     if (!form.mac_address || !form.device_id) return;
     if (modal === "add-interface") {
-      setInterfaces(prev => [...prev, { interface_id: nextId.iface, ...form, device_id: Number(form.device_id) }]);
-      setNextId(p => ({ ...p, iface: p.iface + 1 }));
+      // need to update this to call to the api
     } else {
       setInterfaces(prev => prev.map(i => i.interface_id === form.interface_id ? { ...form, device_id: Number(form.device_id) } : i));
     }
@@ -584,8 +583,7 @@ export default function App() {
   const saveLog = () => {
     if (!form.service_date || !form.device_id) return;
     if (modal === "add-log") {
-      setLogs(prev => [...prev, { log_id: nextId.log, ...form, device_id: Number(form.device_id) }]);
-      setNextId(p => ({ ...p, log: p.log + 1 }));
+     // need to update this to call to the api
     } else {
       setLogs(prev => prev.map(l => l.log_id === form.log_id ? { ...form, device_id: Number(form.device_id) } : l));
     }
