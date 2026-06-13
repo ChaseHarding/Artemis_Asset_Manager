@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
@@ -509,9 +510,9 @@ export default function App() {
     const fetchAll = async () => {
       try {
         const [devRes, intRes, logRes] = await Promise.all([
-          fetch("/api/devices"),
-          fetch("/api/interfaces"),
-          fetch("/api/logs")
+          fetch(`${API_URL}/devices`),
+          fetch(`${API_URL}/interfaces`),
+          fetch(`${API_URL}/logs`)
         ]);
         const [devData, intData, logData] = await Promise.all([
           devRes.json(),
@@ -541,7 +542,7 @@ export default function App() {
     if (!form.serial_number || !form.model_name) return;
     if (modal === "add-device") {
       console.log("form data:", form);
-      const res = await fetch("/api/devices", {
+      const res = await fetch(`${API_URL}/devices`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ serial_number: form.serial_number, model_name: form.model_name })
@@ -549,7 +550,7 @@ export default function App() {
       const newDevice = await res.json();
       setDevices(prev => [...prev, newDevice]);
     } else {
-      const res = await fetch(`/api/devices/${form.device_id}`, {
+      const res = await fetch(`${API_URL}/devices/${form.device_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ serial_number: form.serial_number, model_name: form.model_name })
@@ -561,7 +562,7 @@ export default function App() {
   };
 
  const deleteDevice = async () => {
-  await fetch(`/api/devices/${form.device_id}`, { method: "DELETE" });
+  await fetch(`${API_URL}/devices/${form.device_id}`, { method: "DELETE" });
   setDevices(prev => prev.filter(d => d.device_id !== form.device_id));
   setInterfaces(prev => prev.filter(i => i.device_id !== form.device_id));
   setLogs(prev => prev.filter(l => l.device_id !== form.device_id));
@@ -577,7 +578,7 @@ export default function App() {
   const saveInterface = async () => {
     if (!form.mac_address || !form.device_id) return;
     if (modal === "add-interface") {
-      const res = await fetch("/api/interfaces", {
+      const res = await fetch(`{API_URL}/interfaces`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -589,7 +590,7 @@ export default function App() {
       const newInterface = await res.json();
       setInterfaces(prev => [...prev, newInterface]);
     } else {
-      const res = await fetch(`/api/interfaces/${form.interface_id}`, {
+      const res = await fetch(`${API_URL}/interfaces/${form.interface_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -605,7 +606,7 @@ export default function App() {
   };
 
   const deleteInterface = async () => {
-    await fetch(`/api/interfaces/${form.interface_id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/interfaces/${form.interface_id}`, { method: "DELETE" });
     setInterfaces(prev => prev.filter(i => i.interface_id !== form.interface_id));
     closeModal();
   };
@@ -618,7 +619,7 @@ export default function App() {
   const saveLog = async () => {
     if (!form.service_date || !form.device_id) return;
     if (modal === "add-log") {
-      const res = await fetch("/api/logs", {
+      const res = await fetch(`${API_URL}/logs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -630,7 +631,7 @@ export default function App() {
       const newLog = await res.json();
       setLogs(prev => [...prev, newLog]);
     } else {
-      const res = await fetch(`/api/logs/${form.log_id}`, {
+      const res = await fetch(`${API_URL}/logs/${form.log_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -646,7 +647,7 @@ export default function App() {
   };
 
   const deleteLog = async () => {
-    await fetch(`/api/logs/${form.log_id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/logs/${form.log_id}`, { method: "DELETE" });
     setLogs(prev => prev.filter(l => l.log_id !== form.log_id));
     closeModal();
   };
