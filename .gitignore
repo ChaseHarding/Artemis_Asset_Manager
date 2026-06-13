@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# SQLite database
+*.db
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+
+# Vite build output
+dist/
