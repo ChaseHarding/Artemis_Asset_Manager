@@ -578,7 +578,7 @@ export default function App() {
   const saveInterface = async () => {
     if (!form.mac_address || !form.device_id) return;
     if (modal === "add-interface") {
-      const res = await fetch(`{API_URL}/interfaces`, {
+      const res = await fetch(`${API_URL}/interfaces`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
