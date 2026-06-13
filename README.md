@@ -2,6 +2,8 @@
 
 A full-stack IT hardware inventory and asset tracking system built for enterprise-grade auditing. Artemis provides a single source of truth for managing physical devices, network configurations, and maintenance history.
 
+**🚀 Live Demo:** [artemis-asset-manager.vercel.app](https://artemis-asset-manager.vercel.app)
+
 ---
 
 ## Overview
@@ -29,9 +31,10 @@ In professional IT environments, tracking hardware assets across locations is cr
 | Layer | Technology |
 |---|---|
 | Frontend | React, JSX, CSS Variables |
-| Backend *(in progress)* | Node.js, Express |
-| Database | Oracle Autonomous Database (OCI) |
-| Auth *(planned)* | JWT, bcrypt |
+| Backend  | Node.js, Express |
+| Database | SQLite (local) |
+| Deployment | Vercel (frontend), Railway (backend)
+| Auth *(planned)* | JWT, bcrypt | 
 
 ---
 
@@ -54,7 +57,12 @@ MAINTENANCE_LOG (log_id PK, service_date, description, device_id FK)
 ## Project Structure
 
 ```
+## Project Structure
+
+```
 Artemis_Asset_Manager/
+├── assets/
+│   └── dashboard.png
 ├── Frontend/
 │   ├── public/
 │   │   └── index.html
@@ -63,15 +71,17 @@ Artemis_Asset_Manager/
 │   │   └── ArtemisAssetManager.jsx
 │   ├── vite.config.js
 │   └── package.json
-└── Backend/
-├── db/
-│   └── connection.js
-├── routes/
-│   ├── devices.js
-│   ├── interfaces.js
-│   └── logs.js
-├── index.js
-└── package.json
+├── Backend/
+│   ├── db/
+│   │   └── connection.js
+│   ├── routes/
+│   │   ├── devices.js
+│   │   ├── interfaces.js
+│   │   └── logs.js
+│   ├── index.js
+│   └── package.json
+├── .gitignore
+└── README.md
 ```
 
 ---
@@ -83,9 +93,11 @@ Artemis_Asset_Manager/
 - [x] Search, filtering, and live stats
 - [x] Node.js / Express REST API
 - [x] Connect to SQLite database (local)
+- [x] Deploy backend to Railway
+- [x] Deploy frontend to Vercel
 - [ ] JWT authentication and protected routes
 - [ ] Swap SQLite for Oracle Autonomous Database (OCI)
-- [ ] Deploy to cloud
+- [ ] Add real devices from inventory
 
 ---
 
@@ -93,4 +105,4 @@ Artemis_Asset_Manager/
 
 **Chase Harding**  
 Full Stack Developer   
-[LinkedIn](https://www.linkedin.com/in/chase-f-harding) · [GitHub](https://github.com/ChaseHarding)
+[LinkedIn](https://www.linkedin.com/in/chase-f-harding) · [GitHub](https://github.com/ChaseHarding) · [Live Demo](https://artemis-asset-manager.vercel.app)
