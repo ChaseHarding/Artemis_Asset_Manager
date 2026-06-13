@@ -59,7 +59,6 @@ MAINTENANCE_LOG (log_id PK, service_date, description, device_id FK)
 ```
 ## Project Structure
 
-```
 Artemis_Asset_Manager/
 ├── assets/
 │   └── dashboard.png
